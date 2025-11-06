@@ -1,0 +1,42 @@
+# ------------------------
+# Python-generated files
+# ------------------------
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# ------------------------
+# Virtual Environments
+# ------------------------
+.venv/
+backend/.venv/
+
+# ------------------------
+# Backend app generated output
+# (we keep only .gitkeep for empty-tree commits)
+# ------------------------
+backend/audio/**
+!backend/audio/.gitkeep
+
+backend/pdfs/**
+!backend/pdfs/.gitkeep
+
+backend/__pycache__/
+
+# ------------------------
+# System & temp files
+# ------------------------
+.DS_Store
+*.swp
+*.swo
+*~
+
+# ------------------------
+# IDE / Editor settings
+# ------------------------
+.vscode/
+.idea/
+*.iml

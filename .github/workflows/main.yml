@@ -1,0 +1,29 @@
+name: Deploy to Server
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          lfs: true
+
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
+
+      - name: Sync files with rsync
+        run: |
+          rsync -az --delete --exclude=".env.prod" ./ debian@${{ secrets.SERVER_IP }}:/opt/project/${{ vars.PROJECT_NAME }}/
+
+      - name: Restart docker compose
+        run: |
+          ssh debian@${{ secrets.SERVER_IP }} "cd /opt/project/${{ vars.PROJECT_NAME }} && docker compose --env-file .env.prod -f docker-compose.yml up -d --build"
