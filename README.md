@@ -1,117 +1,117 @@
 # 🎙️ MICO - Meeting Intelligence & Content Organizer
 
-> Sistema de transcripción y resumen automático de reuniones con IA local.
+> Automatic meeting transcription and summarization system with local AI.
 
 ![Python](https://img.shields.io/badge/Python-3.13-blue) ![FastAPI](https://img.shields.io/badge/FastAPI-0.121-green) ![Whisper](https://img.shields.io/badge/Whisper-small-orange) ![Ollama](https://img.shields.io/badge/Ollama-Mistral_7B-red) ![Docker](https://img.shields.io/badge/Docker-Compose-2496ED)
 
-## 📖 Descripción
+## 📖 Description
 
-**MICO** es una solución completa para digitalizar y analizar reuniones de forma automática. Graba audio, transcribe el contenido, genera resúmenes estructurados y crea documentos PDF profesionales, todo procesado localmente sin costes de APIs externas.
+**MICO** is a complete solution to digitize and analyze meetings automatically. It records audio, transcribes content, generates structured summaries, and creates professional PDF documents, all processed locally with no external API costs.
 
-### ✨ Características principales
+### ✨ Key Features
 
-- 🎤 **Transcripción automática** con Whisper (OpenAI)
-- 🤖 **Resúmenes inteligentes** con Mistral 7B via Ollama
-- 📄 **Generación de PDFs** profesionales con logo y formato
-- 🐳 **Containerizado** con Docker para fácil despliegue
-- 💰 **100% local** - Sin costes de APIs cloud
-- ⚡ **Optimizado para CPU** - No requiere GPU
-- 🇪🇸 **Optimizado para español** (multi-idioma compatible)
+- 🎤 **Automatic transcription** with Whisper (OpenAI)
+- 🤖 **Smart summaries** with Mistral 7B via Ollama
+- 📄 **Professional PDF generation** with logo and formatting
+- 🐳 **Containerized** with Docker for easy deployment
+- 💰 **100% local** - No cloud API costs
+- ⚡ **CPU-optimized** - No GPU required
+- 🇪🇸 **Optimized for Spanish** (multi-language compatible)
 
 ---
 
 ## 🚀 Quick Start
 
-### Prerrequisitos
+### Prerequisites
 
-- Docker y Docker Compose instalados
-- Al menos 8GB de RAM disponible
-- ~2GB de espacio en disco (para modelos)
+- Docker and Docker Compose installed
+- At least 8GB of available RAM
+- ~2GB of disk space (for models)
 
-### Instalación rápida
+### Quick Installation
 
 ```bash
-# 1. Clonar el repositorio
-git clone <https://github.com/Ledmon-Marketing-y-Multimedia/mico-api.git>
+# 1. Clone the repository
+git clone <https://github.com/itssDavyd/mico-api.git>
 cd mico
 
-# 2. Levantar servicios
+# 2. Start services
 docker compose up -d
 
-# 3. Descargar el modelo Mistral
+# 3. Download the Mistral model
 docker exec -it ollama ollama pull mistral
 
-# 4. API disponible en http://localhost:8000
+# 4. API available at http://localhost:8000
 ```
 
-### Probar el sistema
+### Test the System
 
 ```bash
-# Usando curl
+# Using curl
 curl -X POST "http://localhost:8000/process" \
-  -F "file=@tu_audio.wav"
+  -F "file=@your_audio.wav"
 
-# O accede a la documentación interactiva
+# Or access interactive documentation
 open http://localhost:8000/docs
 ```
 
 ---
 
-## 🏗️ Arquitectura
+## 🏗️ Architecture
 
 ```
 ┌─────────────────┐
-│  Audio Input    │  (grabación móvil/desktop)
+│  Audio Input    │  (mobile/desktop recording)
 │  .wav/.mp3/etc  │
 └────────┬────────┘
          ↓
 ┌────────────────────────────┐
 │   FastAPI Backend          │
-│   Puerto: 8000             │
+│   Port: 8000               │
 └────────┬───────────────────┘
          ↓
 ┌────────────────────────────┐
-│   Whisper (small)          │  Transcripción
-│   Idioma: ES               │  audio → texto
+│   Whisper (small)          │  Transcription
+│   Language: ES             │  audio → text
 └────────┬───────────────────┘
          ↓
 ┌────────────────────────────┐
-│   Ollama + Mistral 7B      │  Generación
-│   Puerto: 11434            │  de resumen
+│   Ollama + Mistral 7B      │  Summary
+│   Port: 11434              │  generation
 └────────┬───────────────────┘
          ↓
 ┌────────────────────────────┐
-│   FPDF Generator           │  Creación
-│   + Logo Ledmon            │  documento PDF
+│   FPDF Generator           │  PDF document
+│   + Logo                   │  creation
 └────────┬───────────────────┘
          ↓
 ┌────────────────────────────┐
 │   PDF Output               │
-│   ./pdfs/resumen.pdf       │
+│   ./pdfs/summary.pdf       │
 └────────────────────────────┘
 ```
 
 ---
 
-## 📁 Estructura del Proyecto
+## 📁 Project Structure
 
 ```
 mico/
-├── docker-compose.yml        # Orquestación de servicios
-├── README.md                 # Este archivo
-├── ROADMAP.md                # Planificación y futuras features
-├── WARP.md                   # Contexto para Warp AI
+├── docker-compose.yml        # Service orchestration
+├── README.md                 # This file
+├── ROADMAP.md                # Planning and future features
+├── WARP.md                   # Context for Warp AI
 ├── .gitignore
 └── backend/
     ├── main.py               # FastAPI application
-    ├── pyproject.toml        # Dependencias Python (uv)
-    ├── uv.lock               # Lock file de dependencias
-    ├── Dockerfile            # Imagen Docker del backend
-    ├── .venv/                # Virtual environment (dev local)
-    ├── audio/                # 📂 Audios subidos
-    ├── pdfs/                 # 📂 PDFs generados
+    ├── pyproject.toml        # Python dependencies (uv)
+    ├── uv.lock               # Dependency lock file
+    ├── Dockerfile            # Backend Docker image
+    ├── .venv/                # Virtual environment (local dev)
+    ├── audio/                # 📂 Uploaded audio files
+    ├── pdfs/                 # 📂 Generated PDFs
     └── assets/
-        └── logo.png          # Logo para PDFs
+        └── logo.png          # Logo for PDFs
 ```
 
 ---
@@ -120,7 +120,7 @@ mico/
 
 ### `POST /process`
 
-Procesa un archivo de audio completo: transcripción + resumen + generación de PDF.
+Processes a full audio file: transcription + summary + PDF generation.
 
 **Request:**
 
@@ -135,50 +135,50 @@ file: <audio_file>
 
 ```json
 {
-  "summary": "1. Resumen breve de la reunión.\n\nEn esta reunión...",
-  "pdf_path": "./pdfs/audio_reunión_resumen.pdf"
+  "summary": "1. Brief meeting summary.\n\nIn this meeting...",
+  "pdf_path": "./pdfs/meeting_audio_summary.pdf"
 }
 ```
 
-**Formatos de audio soportados:**
+**Supported audio formats:**
 
-- `.wav` (recomendado)
+- `.wav` (recommended)
 - `.mp3`
 - `.m4a`
 - `.webm`
 - `.ogg`
-- Cualquier formato compatible con FFmpeg
+- Any FFmpeg-compatible format
 
-**Tiempo estimado de procesamiento:**
+**Estimated processing time:**
 
-- Audio de 5 min → ~2-5 minutos
-- Audio de 30 min → ~15-30 minutos
-- Audio de 1 hora → ~30-60 minutos
+- 5-minute audio → ~2-5 minutes
+- 30-minute audio → ~15-30 minutes
+- 1-hour audio → ~30-60 minutes
 
 ---
 
-## 🛠️ Desarrollo Local
+## 🛠️ Local Development
 
-### Sin Docker (desarrollo)
+### Without Docker (development)
 
 ```bash
-# Navegar al backend
+# Navigate to backend
 cd backend
 
-# Instalar uv (si no lo tienes)
+# Install uv (if you don't have it)
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# Instalar dependencias
+# Install dependencies
 uv sync
 
-# Activar entorno virtual
+# Activate virtual environment
 source .venv/bin/activate
 
-# Ejecutar servidor de desarrollo
+# Run development server
 uv run python main.py
 ```
 
-**Nota:** Para desarrollo local necesitas tener Ollama instalado:
+**Note:** For local development, you need Ollama installed:
 
 ```bash
 # macOS
@@ -187,23 +187,23 @@ ollama serve
 ollama pull mistral
 ```
 
-### Añadir nuevas dependencias
+### Add New Dependencies
 
 ```bash
 cd backend
-uv add nombre-del-paquete
+uv add package-name
 ```
 
-### Testing del endpoint
+### Endpoint Testing
 
 ```bash
-# Healthcheck básico
+# Basic health check
 curl http://localhost:8000
 
-# Documentación interactiva (Swagger)
+# Interactive documentation (Swagger)
 open http://localhost:8000/docs
 
-# Procesar audio de prueba
+# Process test audio
 curl -X POST "http://localhost:8000/process" \
   -F "file=@test_audio.wav" \
   -o response.json
@@ -211,219 +211,203 @@ curl -X POST "http://localhost:8000/process" \
 
 ---
 
-## 🐳 Comandos Docker Útiles
+## 🐳 Useful Docker Commands
 
 ```bash
-# Ver logs en tiempo real
+# View real-time logs
 docker compose logs -f
 
-# Ver solo logs del backend
+# View backend logs only
 docker compose logs -f backend
 
-# Reiniciar un servicio
+# Restart a service
 docker compose restart backend
 
-# Reconstruir imagen del backend
+# Rebuild backend image
 docker compose up -d --build backend
 
-# Parar todos los servicios
+# Stop all services
 docker compose down
 
-# Parar y eliminar volúmenes (reset completo)
+# Stop and remove volumes (full reset)
 docker compose down -v
 
-# Entrar al contenedor del backend
+# Enter backend container
 docker exec -it backend bash
 
-# Ver modelos instalados en Ollama
+# View installed Ollama models
 docker exec -it ollama ollama list
 ```
 
 ---
 
-## ⚙️ Configuración
+## ⚙️ Configuration
 
-### Variables de Entorno
+### Environment Variables
 
 ```bash
 # docker-compose.yml (backend service)
-OLLAMA_HOST=http://ollama:11434  # URL del servidor Ollama
+OLLAMA_HOST=http://ollama:11434  # Ollama server URL
 ```
 
-### Personalización del Prompt
+### Prompt Customization
 
-Puedes modificar el prompt de resumen en `backend/main.py` líneas 28-49 para adaptar el formato del resumen a tus necesidades.
+You can modify the summary prompt in `backend/main.py` lines 28-49 to adapt the summary format to your needs.
 
-### Cambiar el modelo de Whisper
+### Change Whisper Model
 
-En `backend/main.py` línea 11:
+In `backend/main.py` line 11:
 
 ```python
-MODEL = whisper.load_model("small")  # Opciones: tiny, base, small, medium, large
+MODEL = whisper.load_model("small")  # Options: tiny, base, small, medium, large
 ```
 
-**Modelos disponibles:**
+**Available models:**
 
-- `tiny` - Más rápido, menor precisión (~1GB RAM)
-- `base` - Balance básico (~1GB RAM)
-- `small` - **Recomendado** (~2GB RAM)
-- `medium` - Mayor precisión (~5GB RAM)
-- `large` - Máxima precisión (~10GB RAM)
+- `tiny` - Faster, lower accuracy (~1GB RAM)
+- `base` - Basic balance (~1GB RAM)
+- `small` - **Recommended** (~2GB RAM)
+- `medium` - Higher accuracy (~5GB RAM)
+- `large` - Maximum accuracy (~10GB RAM)
 
 ---
 
-## 📊 Rendimiento
+## 📊 Performance
 
-### Requisitos de Hardware
+### Hardware Requirements
 
-| Componente | Mínimo       | Recomendado |
-| ---------- | ------------ | ----------- |
-| RAM        | 4GB          | 8GB+        |
-| CPU        | 2 cores      | 4+ cores    |
-| Disco      | 5GB          | 10GB+       |
-| GPU        | No requerida | Opcional\*  |
+| Component | Minimum    | Recommended |
+| --------- | ---------- | ----------- |
+| RAM       | 4GB        | 8GB+        |
+| CPU       | 2 cores    | 4+ cores    |
+| Disk      | 5GB        | 10GB+       |
+| GPU       | Not required | Optional\* |
 
-\*Con GPU NVIDIA (CUDA) el procesamiento puede ser 5-10x más rápido.
+\*With an NVIDIA GPU (CUDA), processing can be 5-10x faster.
 
-### Tiempos de Procesamiento (CPU)
+### Processing Times (CPU)
 
-| Duración Audio | Transcripción | Resumen | Total      |
+| Audio Duration | Transcription | Summary | Total      |
 | -------------- | ------------- | ------- | ---------- |
-| 5 minutos      | 2-5 min       | 5-10s   | ~3-6 min   |
-| 30 minutos     | 15-30 min     | 10-20s  | ~16-31 min |
-| 1 hora         | 30-60 min     | 15-30s  | ~31-61 min |
+| 5 minutes      | 2-5 min       | 5-10s   | ~3-6 min   |
+| 30 minutes     | 15-30 min     | 10-20s  | ~16-31 min |
+| 1 hour         | 30-60 min     | 15-30s  | ~31-61 min |
 
 ---
 
-## 🎯 Casos de Uso
+## 🎯 Use Cases
 
-### 1️⃣ Reuniones de Trabajo
+### 1️⃣ Work Meetings
 
 ```bash
-# Grabar reunión → Transcribir → Generar acta automática
-Resultado: PDF con decisiones y tareas asignadas
+# Record meeting → Transcribe → Generate automatic minutes
+Result: PDF with decisions and assigned tasks
 ```
 
-### 2️⃣ Entrevistas
+### 2️⃣ Interviews
 
 ```bash
-# Grabar entrevista → Extraer puntos clave → Documento resumen
-Resultado: Transcripción completa + resumen ejecutivo
+# Record interview → Extract key points → Summary document
+Result: Full transcript + executive summary
 ```
 
-### 3️⃣ Formaciones y Conferencias
+### 3️⃣ Training and Conferences
 
 ```bash
-# Grabar sesión → Generar apuntes estructurados
-Resultado: Material de estudio organizado
+# Record session → Generate structured notes
+Result: Organized study material
 ```
 
-### 4️⃣ Notas de Voz
+### 4️⃣ Voice Notes
 
 ```bash
-# Grabar ideas → Convertir a texto → Organizar en documento
-Resultado: Ideas capturadas y estructuradas
+# Record ideas → Convert to text → Organize in document
+Result: Captured and structured ideas
 ```
 
 ---
 
 ## 🔜 Roadmap
 
-Ver [ROADMAP.md](./ROADMAP.md) para el plan completo. Próximas features:
+See [ROADMAP.md](./ROADMAP.md) for the complete plan. Upcoming features:
 
-- [ ] 📱 PWA para grabación desde móvil
-- [ ] 📝 Integración con Notion API
-- [ ] 👥 Sistema multi-usuario
-- [ ] 🏷️ Etiquetado automático con embeddings
-- [ ] 📧 Envío automático por email/Telegram
-- [ ] 📊 Dashboard de analytics
-- [ ] 🌍 Soporte multi-idioma mejorado
-- [ ] 🔐 Autenticación y autorización
+- [ ] 📱 PWA for mobile recording
+- [ ] 📝 Notion API integration
+- [ ] 👥 Multi-user system
+- [ ] 🏷️ Automatic tagging with embeddings
+- [ ] 📧 Automatic sending via email/Telegram
+- [ ] 📊 Analytics dashboard
+- [ ] 🌍 Improved multi-language support
+- [ ] 🔐 Authentication and authorization
 
 ---
 
 ## 🐛 Troubleshooting
 
-### Problema: "Connection refused" a Ollama
+### Problem: "Connection refused" to Ollama
 
 ```bash
-# Verificar que Ollama esté corriendo
+# Verify Ollama is running
 docker compose ps
 
-# Ver logs de Ollama
+# Check Ollama logs
 docker compose logs ollama
 
-# Reiniciar Ollama
+# Restart Ollama
 docker compose restart ollama
 ```
 
-### Problema: Transcripción muy lenta
+### Problem: Transcription is too slow
 
 ```bash
-# Usar un modelo más pequeño (en main.py)
-MODEL = whisper.load_model("tiny")  # o "base"
+# Use a smaller model (in main.py)
+MODEL = whisper.load_model("tiny")  # or "base"
 ```
 
-### Problema: "Model not found" en Ollama
+### Problem: "Model not found" in Ollama
 
 ```bash
-# Descargar el modelo manualmente
+# Download model manually
 docker exec -it ollama ollama pull mistral
 
-# Verificar modelos instalados
+# Verify installed models
 docker exec -it ollama ollama list
 ```
 
-### Problema: Out of Memory
+### Problem: Out of Memory
 
 ```bash
-# Aumentar memoria disponible para Docker
+# Increase available memory for Docker
 # Docker Desktop → Settings → Resources → Memory: 8GB+
 
-# O usar modelo Whisper más pequeño
+# Or use a smaller Whisper model
 MODEL = whisper.load_model("tiny")
 ```
 
 ---
 
-## 🤝 Contribuir
+## 🤝 Contributing
 
-Las contribuciones son bienvenidas. Por favor:
+Contributions are welcome. Please:
 
-1. Fork del proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit de cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
-
----
-
-## 📄 Licencia
-
-Este proyecto está bajo desarrollo por **Ledmon Marketing**.
+1. Fork the project
+2. Create a branch for your feature (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 ---
 
-## 🙏 Agradecimientos
+## 🙏 Acknowledgments
 
-- [OpenAI Whisper](https://github.com/openai/whisper) - Modelo de transcripción
-- [Ollama](https://ollama.ai/) - Runtime de modelos LLM local
-- [Mistral AI](https://mistral.ai/) - Modelo Mistral 7B
-- [FastAPI](https://fastapi.tiangolo.com/) - Framework web
-- [FPDF](http://www.fpdf.org/) - Generación de PDFs
-
----
-
-## 📞 Contacto
-
-**Ledmon Marketing**
-
-Proyecto desarrollado para optimizar la gestión de reuniones y contenido organizacional.
-
----
+- [OpenAI Whisper](https://github.com/openai/whisper) - Transcription model
+- [Ollama](https://ollama.ai/) - Local LLM runtime
+- [Mistral AI](https://mistral.ai/) - Mistral 7B model
+- [FastAPI](https://fastapi.tiangolo.com/) - Web framework
+- [FPDF](http://www.fpdf.org/) - PDF generation
 
 <p align="center">
   <strong>MICO</strong> - Meeting Intelligence & Content Organizer<br>
-  Desarrollador: David Fernandez <br>
-  Empresa: Ledmon Marketing
+  Developer: David Fernandez <br>
+  Company: Aitodetec
 </p>
