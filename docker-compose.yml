@@ -1,7 +1,22 @@
 services:
+  redis:
+    image: redis:latest-alpine
+    container_name: mico-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   ollama:
+    profiles: ["dev"]
     image: ollama/ollama
-    container_name: ollama
+    container_name: mico-ollama
     ports:
       - "11434:11434"
     volumes:
@@ -10,16 +25,54 @@ services:
 
   backend:
     build: ./backend
-    container_name: backend
+    container_name: mico-backend
     depends_on:
-      - ollama
+      redis:
+        condition: service_healthy
+      ollama:
+        condition: service_started
+        required: false
     environment:
+      - REDIS_URL=redis://redis:6379
       - OLLAMA_HOST=http://ollama:11434
+      - OLLAMA_MODEL=mistral
+      - AUDIO_DIR=/app/audio
+      - PDF_DIR=/app/pdfs
+      - AUTH_ENABLED=true
+    env_file:
+      - .env
     ports:
       - "8000:8000"
     volumes:
-      - ./backend:/app
+      - audio_data:/app/audio
+      - pdf_data:/app/pdfs
+    restart: unless-stopped
+
+  worker:
+    build: ./backend
+    container_name: mico-worker
+    command: ["uv", "run", "arq", "workers.settings.WorkerSettings"]
+    depends_on:
+      redis:
+        condition: service_healthy
+      ollama:
+        condition: service_started
+        required: false
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - OLLAMA_HOST=http://ollama:11434
+      - OLLAMA_MODEL=mistral
+      - AUDIO_DIR=/app/audio
+      - PDF_DIR=/app/pdfs
+    env_file:
+      - .env
+    volumes:
+      - audio_data:/app/audio
+      - pdf_data:/app/pdfs
     restart: unless-stopped
 
 volumes:
+  redis_data:
   ollama_data:
+  audio_data:
+  pdf_data:

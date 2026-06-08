@@ -1,0 +1,45 @@
+services:
+  backend:
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      - STT_BASE_URL=http://thor-stt:8090
+      - STT_TRANSCRIBE_PATH=/transcribe
+      - STT_TIMEOUT_SECONDS=14400
+      - MAX_AUDIO_BYTES=200000000
+      - MAX_UPLOAD_MB=200
+      - MAX_CHUNK_MB=50
+      - OLLAMA_HOST=http://ollama:11434
+      - OLLAMA_MODEL=qwen2.5:7b
+      - OLLAMA_TEMPERATURE=0.1
+      - OLLAMA_NUM_PREDICT=2048
+      - OLLAMA_TIMEOUT=3600
+    networks:
+      - default
+      - thor_shared
+
+  worker:
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      - STT_BASE_URL=http://thor-stt:8090
+      - STT_TRANSCRIBE_PATH=/transcribe
+      - STT_TIMEOUT_SECONDS=14400
+      - MAX_AUDIO_BYTES=200000000
+      - MAX_UPLOAD_MB=200
+      - MAX_CHUNK_MB=50
+      - OLLAMA_HOST=http://ollama:11434
+      - OLLAMA_MODEL=qwen2.5:7b
+      - OLLAMA_TEMPERATURE=0.1
+      - OLLAMA_NUM_PREDICT=2048
+      - OLLAMA_TIMEOUT=3600
+    networks:
+      - default
+      - thor_shared
+
+networks:
+  thor_shared:
+    external: true
+    name: ${THOR_NETWORK:-thor-rag_default}

@@ -1,14 +1,21 @@
 [project]
 name = "backend"
-version = "0.1.0"
+version = "1.0.0"
 description = "MICO - Meeting Intelligence & Content Organizer"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.11"
 dependencies = [
+    "arq>=0.26.3",
     "fastapi>=0.121.0",
+    "faster-whisper>=1.1.0",
     "fpdf2>=2.8.5",
-    "openai-whisper>=20250625",
+    "httpx>=0.28.0",
+    "pydantic>=2.12.0",
+    "pydantic-settings>=2.7.0",
     "python-multipart>=0.0.20",
-    "requests>=2.32.5",
+    "redis>=5.2.0",
     "uvicorn>=0.38.0",
 ]
+
+[project.scripts]
+mico-worker = "arq workers.settings.WorkerSettings"
