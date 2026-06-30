@@ -22,9 +22,14 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
     settings = get_settings()
+    if not settings.uses_remote_stt:
+        logger.warning(
+            "STT_BASE_URL is not configured — transcription will fail. "
+            "Set it to the thor-stt service URL."
+        )
     logger.info(
         "MICO API starting (stt=%s, ollama=%s/%s, auth=%s)",
-        settings.stt_base_url or "local-whisper",
+        settings.stt_base_url or "UNCONFIGURED",
         settings.ollama_host,
         settings.ollama_model,
         settings.auth_enabled,

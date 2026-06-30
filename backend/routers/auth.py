@@ -27,7 +27,7 @@ def login(data: LoginData, response: Response) -> dict[str, str]:
             value=settings.session_token,
             httponly=True,
             samesite="lax",
-            secure=False,
+            secure=settings.cookie_secure,
         )
         return {"mensaje": "Login correcto"}
 

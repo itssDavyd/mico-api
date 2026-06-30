@@ -11,6 +11,10 @@ logger = logging.getLogger(__name__)
 
 SUMMARY_SCHEMA = MeetingSummary.model_json_schema()
 
+# Max partial summaries merged in a single Ollama call. Long recordings produce
+# many partials; merging them in batches keeps each prompt within context limits.
+MERGE_BATCH_SIZE = 8
+
 CHUNK_PROMPT = """Eres un asistente comercial experto. Analiza este fragmento de una conversación de venta en español.
 Extrae SOLO información explícita del texto. No inventes productos, precios, nombres ni compromisos.
 
@@ -88,7 +92,10 @@ def _call_ollama(prompt: str) -> dict:
     if not content:
         raise ValueError("Ollama returned empty response")
 
-    return json.loads(content)
+    try:
+        return json.loads(content)
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"Ollama returned invalid JSON: {content[:200]}") from exc
 
 
 def _parse_summary(data: dict) -> MeetingSummary:
@@ -109,10 +116,7 @@ def _parse_summary(data: dict) -> MeetingSummary:
         )
 
 
-def _merge_summaries(partials: list[MeetingSummary]) -> MeetingSummary:
-    if len(partials) == 1:
-        return partials[0]
-
+def _merge_batch(partials: list[MeetingSummary]) -> MeetingSummary:
     partials_text = json.dumps(
         [p.model_dump() for p in partials],
         ensure_ascii=False,
@@ -120,6 +124,18 @@ def _merge_summaries(partials: list[MeetingSummary]) -> MeetingSummary:
     )
     merged = _call_ollama(MERGE_PROMPT.format(partials=partials_text))
     return _parse_summary(merged)
+
+
+def _merge_summaries(partials: list[MeetingSummary]) -> MeetingSummary:
+    current = partials
+    while len(current) > 1:
+        merged_level: list[MeetingSummary] = []
+        for start in range(0, len(current), MERGE_BATCH_SIZE):
+            batch = current[start : start + MERGE_BATCH_SIZE]
+            merged_level.append(batch[0] if len(batch) == 1 else _merge_batch(batch))
+        current = merged_level
+
+    return current[0]
 
 
 def summarize_text(text: str) -> MeetingSummary:

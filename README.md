@@ -2,7 +2,7 @@
 
 Sales visit audio → structured commercial report PDF.
 
-Uses shared **thor-stt** (transcription) and **Ollama qwen2.5:7b** (summarization) on Jetson Thor. No extra models loaded by MICO.
+Uses shared **thor-stt** (transcription) and **Ollama** (summarization) on Jetson Thor. No extra models loaded by MICO.
 
 ## Flow
 
@@ -45,12 +45,19 @@ Record in **webm/opus ~48 kbps** on the client. Default chunk limit: **50 MB** (
 
 `POST /auth/login` → session cookie. Required when `AUTH_ENABLED=true`.
 
-## Run
+## Run (NVIDIA Thor)
+
+Production deployment against shared **thor-stt** and **Ollama** on Thor:
+
+```bash
+cp .env.example .env   # configure STT_BASE_URL, OLLAMA_HOST, THOR_NETWORK, secrets
+docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+```
+
+Optional local Ollama for testing without Thor:
 
 ```bash
 docker compose --profile dev up -d
-
-docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 ```
 
 ## Key env vars
@@ -59,9 +66,10 @@ docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 |----------|------------|
 | `STT_BASE_URL` | `http://thor-stt:8090` |
 | `OLLAMA_HOST` | `http://ollama:11434` |
-| `OLLAMA_MODEL` | `qwen2.5:7b` |
+| `OLLAMA_MODEL` | `qwen2.5:7b-instruct-q4_K_M` |
 | `MAX_CHUNK_MB` | `50` |
 | `THOR_NETWORK` | Docker network of thor-rag-api |
+| `COOKIE_SECURE` | `true` (keep `true` behind HTTPS) |
 
 ## Stack
 

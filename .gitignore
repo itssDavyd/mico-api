@@ -16,6 +16,8 @@ backend/pdfs/**
 
 backend/__pycache__/
 
+.env
+
 .DS_Store
 *.swp
 *.swo

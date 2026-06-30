@@ -7,8 +7,8 @@ from fpdf import FPDF
 from config import get_settings
 from models.schemas import MeetingSummary, TranscriptionResult
 
-FONT_REGULAR = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
-FONT_BOLD = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+FONT_REGULAR = "/usr/share/fonts/dejavu/DejaVuSans.ttf"
+FONT_BOLD = "/usr/share/fonts/dejavu/DejaVuSans-Bold.ttf"
 
 
 def _safe_section(pdf: FPDF, title: str, items: list[str], bullet: bool = True) -> None:

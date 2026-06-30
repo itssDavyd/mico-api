@@ -1,6 +1,6 @@
-FROM python:3.13-slim
+FROM python:alpine
 
-RUN apt-get update && apt-get install -y ffmpeg fonts-dejavu && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache ttf-dejavu
 
 WORKDIR /app
 COPY pyproject.toml uv.lock* ./
@@ -13,4 +13,4 @@ RUN mkdir -p ./audio ./pdfs ./assets
 
 ENV PATH="/app/.venv/bin:$PATH"
 
-CMD ["uv", "run", "python", "main.py"]
+CMD ["uv", "run", "uvicorn", "main:create_app", "--host", "0.0.0.0", "--port", "8000", "--factory"]
