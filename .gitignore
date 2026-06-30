@@ -18,6 +18,8 @@ backend/__pycache__/
 
 .env
 
+*.zip
+
 .DS_Store
 *.swp
 *.swo

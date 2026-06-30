@@ -12,4 +12,4 @@ services:
 networks:
   thor_shared:
     external: true
-    name: ${THOR_NETWORK:-thor-rag_default}
+    name: ${THOR_NETWORK:-thor_rag_net}

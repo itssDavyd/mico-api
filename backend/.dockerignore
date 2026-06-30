@@ -3,6 +3,12 @@ __pycache__
 *.pyc
 *.pyo
 *.pyd
+.ruff_cache
 .git
 .vscode
 .idea
+.env
+audio/*
+pdfs/*
+!audio/.gitkeep
+!pdfs/.gitkeep

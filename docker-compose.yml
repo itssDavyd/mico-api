@@ -32,7 +32,7 @@ services:
     env_file:
       - .env
     ports:
-      - "8000:8000"
+      - "8004:8000"
     volumes:
       - audio_data:/app/audio
       - pdf_data:/app/pdfs
